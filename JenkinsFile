@@ -10,6 +10,8 @@ pipeline {
         environment {
             GIT_REPO_NAME = "OKR-Manifest"
             GIT_USER_NAME = "Phoneix007"
+            OLD_TEXT = "ajaysharma/okr-ci-cd:2"
+            NEW_TEXT = "ajaysharma/okr-ci-cd:7"
         }
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
@@ -17,7 +19,7 @@ pipeline {
                     git config user.email "ajaysharma520420@gmail.com"
                     git config user.name "Ajay Sharma"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sh sed -i 's/ajaysharma07\\+/okr-ci-cd:[0-9]\\+/ajaysharma07\\+/okr-ci-cd:7/g' deployment.yml
+                    sh sed -i "s/${OLD_TEXT}/${NEW_TEXT}/g" deployment.yml
                     git add deployment.yml
                     git commit -m "Update deployment image to version 5"
                     git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
