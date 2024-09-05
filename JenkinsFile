@@ -1,0 +1,29 @@
+pipeline {
+  agent {
+    docker {
+      image 'abhishekf5/maven-abhishek-docker-agent:v1'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+    }
+  }
+  stages {
+    stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "OKR-Manifest"
+            GIT_USER_NAME = "Phoneix007"
+        }
+        steps {
+            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                sh '''
+                    git config user.email "ajaysharma520420@gmail.com"
+                    git config user.name "Ajay Sharma"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i 's/ajaysharma07\/okr-ci-cd:[0-9]\+/ajaysharma07\/okr-ci-cd:5/g' deployement.yml
+                    git add deployment.yml
+                    git commit -m "Update deployment image to version 5"
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+            }
+        }
+    }
+  }
+}
