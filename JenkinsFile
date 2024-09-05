@@ -17,7 +17,7 @@ pipeline {
                     git config user.email "ajaysharma520420@gmail.com"
                     git config user.name "Ajay Sharma"
                     BUILD_NUMBER=${BUILD_NUMBER}
-                    sed -i 's/ajaysharma07\/okr-ci-cd:[0-9]\+/ajaysharma07\/okr-ci-cd:5/g' deployement.yml
+                    sh 'sed -i "s#ajaysharma07/okr-ci-cd:[0-9]\\+#ajaysharma07/okr-ci-cd:${BUILD_NUMBER}#g" deployment.yml'
                     git add deployment.yml
                     git commit -m "Update deployment image to version 5"
                     git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
